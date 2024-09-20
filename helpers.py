@@ -2,7 +2,7 @@ import re
 import requests
 import tempfile
 from playwright.async_api import async_playwright
-domain_list = ["reddit", "instagram"]
+domain_list = ["reddit", "instagram","twitter","tiktok"]
 #// self explanatory, uses regular expression for web url patterns
 def check_if_has_link(user_input:str):
 
@@ -12,37 +12,19 @@ def check_if_has_link(user_input:str):
 
     if url_match:
         url = url_match.group(0)
-
-        
-
         return url
         
-
     else:
         
         return None
-
-    
-   
 
 #// locating the first video tag and copying its src after receiving url
 async def extract_blob(url:str) -> str:
  
     async with async_playwright() as p:
-        # tag_selector = """
-        # {
-        # query(root, selector) {
-        #       return root.querySelector(selector);
-        # },
-        # queryAll(root, selector) {
-        #       return Array.from(root.querySelectorAll(selector));
-        #   }
-        # }"""
-        
-        # await p.selectors.register("tag",tag_selector)
         browser = await p.chromium.launch(args=["--disable-blink-features=AutomationControlled"])
         context = await browser.new_context(
-            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" # Wasn't sure what webkit was best, kept on testing around.
         )
         try:
             page = await context.new_page()
@@ -59,21 +41,21 @@ async def extract_blob(url:str) -> str:
             await context.close()
             await browser.close()
 
-
+# //Writing the video blob into the file-path the was created.
 def save_blob_to_file(blob_url, file_path) -> None:
     response = requests.get(blob_url, stream=True)
     with open(file_path, 'wb') as file:
         for chunk in response.iter_content(chunk_size=8192):
             if chunk:
                 file.write(chunk)
-    
 
+# //Creating the path to the dowloaded file within the machine running the bot. Defaulted for mp4.
 def create_file_path(blob_url:str) -> str:
     with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as temp_file:
         file_path = temp_file.name
     save_blob_to_file(blob_url, file_path)
     return file_path
-
+    
 
 #//simple definition for checking if the url contains a domain we want to impose video extraction if provided with a link
 def desirable_domain_check(url) -> bool:
