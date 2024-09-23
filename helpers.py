@@ -2,7 +2,7 @@ import re
 import requests
 import tempfile
 from playwright.async_api import async_playwright
-domain_list = ["reddit", "instagram","twitter","tiktok"]
+domain_list = ["reddit", "instagram","twitter"]
 #// self explanatory, uses regular expression for web url patterns
 def check_if_has_link(user_input:str):
 
