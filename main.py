@@ -54,7 +54,7 @@ async def on_message(message: Message) -> None:
     username: str = str(message.author)
     user_message: str = message.content
     channel: str = str(message.channel)
-
+    channel_id: str = str(message.channel.id)
     print(f'[{channel}] {username}: "{user_message}"') #// just prints every message in chat.
     await send_message(message, user_message)
        
