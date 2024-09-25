@@ -20,19 +20,19 @@ async def send_message(message: Message, user_message:str) -> None:
         print('(Message was empty, intents were not enabled properly)')
         return
     
-    url = check_if_has_link(user_message) #//Checks for web URL patterns
+    url = check_if_has_link(user_message) # // Checks for web URL patterns. //
     
   
-    if url and desirable_domain_check(url): #//Checks if url contains the domains we're imposing extractions from (Instagram, reddit, so on..)
+    if url and desirable_domain_check(url): # // Checks if url contains the domains we're imposing extractions from (Instagram, reddit, so on..). //
 
         try:
-            await message.channel.send("Hold on, trying to get that video out for you") #// personal choice of message to show the bot is trying to initiate extraction.
-            file_path = await get_video_response(url) #//Getting final file path
+            await message.channel.send("Hold on, trying to get that video out for you") # // personal choice of message to show the bot is trying to initiate extraction. //
+            file_path = await get_video_response(url) # // Getting final file path //
             with open(file_path, 'rb') as f:
-                    await message.channel.send(file=File(f)) #// sending file to channel.
+                    await message.channel.send(file=File(f)) # // sending file to channel. //
 
-            os.remove(file_path) #// removing the file from system.
-        except TimeoutError as e: #// if it took the bot too much time identifying the video, returns an error
+            os.remove(file_path) # // removing the file from system. //
+        except TimeoutError as e: # // if it took the bot too much time identifying the video, returns an error //
              print(f"Timeout error occured {e}")
              await message.channel.send("Error, it took me too long to look for the video :(")
         except Exception as e:
@@ -46,16 +46,18 @@ async def send_message(message: Message, user_message:str) -> None:
 async def on_ready() -> None:
     print(f'{client.user} is now running')
 
+# // could be simplified by returning none if 'check_if_has_link' returns falls, but we're gathering message information for later usage if needed. //
 @client.event
 async def on_message(message: Message) -> None: 
-    if message.author == client.user: #// if the bot is the one sending the message, do nothing.
+    if message.author == client.user: # // if the bot is the one sending the message, do nothing. //
         return
     
     username: str = str(message.author)
     user_message: str = message.content
     channel: str = str(message.channel)
     channel_id: str = str(message.channel.id)
-    print(f'[{channel}] {username}: "{user_message}"') #// just prints every message in chat.
+    print(channel_id)
+    print(f'[{channel}] {username}: "{user_message}"') # // just prints every message in chat. //
     await send_message(message, user_message)
        
 
