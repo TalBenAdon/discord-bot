@@ -13,6 +13,7 @@ TOKEN: Final[str] = os.getenv('DISCORD_TOKEN2') #Extracting the discord token fr
 intents: Intents = Intents.default()
 intents.message_content = True
 client: Client = Client(intents=intents)
+standby_message: str = "Hold on, trying to get that video out for you"
 
 # Message Functionality
 async def handle_received_message(message: Message, user_message:str) -> None:
@@ -26,7 +27,7 @@ async def handle_received_message(message: Message, user_message:str) -> None:
     if url and desirable_domain_check(url): # // Checks if url contains the domains we're imposing extractions from (Instagram, reddit, so on..). //
 
         try:
-            await message.channel.send("Hold on, trying to get that video out for you") # // personal choice of message to show the bot is trying to initiate extraction. //
+            await message.channel.send(standby_message) # // personal choice of message to show the bot is trying to initiate extraction. //
             file_path = await get_video_response(url) # // Getting final file path //
             with open(file_path, 'rb') as f:
                     await message.channel.send(file=File(f)) # // sending file to channel. //
@@ -49,7 +50,7 @@ async def on_ready() -> None:
 # // could be simplified by returning none if 'check_if_has_link' returns falls, but we're gathering message information for later usage if needed. //
 @client.event
 async def on_message(message: Message) -> None: 
-    if message.author == client.user: # // if the bot is the one sending the message, do nothing. //
+    if message.author == client.user: 
         return
     
     username: str = str(message.author)
