@@ -15,9 +15,9 @@ intents.message_content = True
 client: Client = Client(intents=intents)
 
 # Message Functionality
-async def send_message(message: Message, user_message:str) -> None:
+async def handle_received_message(message: Message, user_message:str) -> None:
     if not user_message:
-        print('(Message was empty, intents were not enabled properly)')
+        print('(Message was empty, intents were not enabled properly)') # // not sure about this, if an video is uploaded, user_message is considered 'empty'. //
         return
     
     url = check_if_has_link(user_message) # // Checks for web URL patterns. //
@@ -58,7 +58,7 @@ async def on_message(message: Message) -> None:
     channel_id: str = str(message.channel.id)
     print(channel_id)
     print(f'[{channel}] {username}: "{user_message}"') # // just prints every message in chat. //
-    await send_message(message, user_message)
+    await handle_received_message(message, user_message)
        
 
 
