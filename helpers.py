@@ -31,6 +31,7 @@ async def extract_blob(url:str) -> str:
             
             await page.goto(url)
             video_element = await page.wait_for_selector("video")
+            
             blob_url = str(await video_element.get_attribute("src"))
             if blob_url:
                 print("extracted url: ", blob_url)
@@ -40,7 +41,7 @@ async def extract_blob(url:str) -> str:
         finally:
             await context.close()
             await browser.close()
-
+    
 # //Writing the video blob into the file-path the was created.
 def save_blob_to_file(blob_url, file_path) -> None:
     response = requests.get(blob_url, stream=True)
