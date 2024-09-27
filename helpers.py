@@ -4,6 +4,7 @@ import tempfile
 from playwright.async_api import async_playwright
 domain_list = ["reddit", "instagram","twitter"]
 #// self explanatory, uses regular expression for web url patterns
+#// subject to change
 def check_if_has_link(user_input:str):
 
     url_pattern = re.compile(r'https?://\S+|www\.\S+')
